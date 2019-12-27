@@ -4,12 +4,15 @@
  * @Version: v1.0.0
  * @Author: 吴汉钊
  * @Date: 2019-12-25 10:48:01
- * @LastEditors  : 吴汉钊
- * @LastEditTime : 2019-12-27 10:34:09
+ * @LastEditors  : Hanzhaorz
+ * @LastEditTime : 2019-12-27 14:26:43
  */
 import typescript from "rollup-plugin-typescript2";
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import clear from "rollup-plugin-clear";
+import filesize from "rollup-plugin-filesize";
+import minify from "rollup-plugin-babel-minify";
 
 export default {
   input: "./src/main.ts",
@@ -26,8 +29,16 @@ export default {
     }
   ],
   plugins: [
+    clear({
+      targets: ['./dist'],
+      watch: true
+     }),
     typescript(),
     resolve(),
-    commonjs()
+    commonjs(),
+    minify({
+      comments: false
+    }),
+    filesize()
   ]
 };

@@ -1,11 +1,11 @@
 /*
- * @Github: 
+ * @Github: https://github.com/HanZhaorz/uni-app-utils
  * @Descripttion: uni app utils
  * @Version: v1.0.0
  * @Author: Hanzhaorz
  * @Date: 2019-12-24 16:43:45
  * @LastEditors  : Hanzhaorz
- * @LastEditTime : 2019-12-27 11:53:42
+ * @LastEditTime : 2019-12-27 16:19:03
  */
 
 import cloneDeep from "lodash/cloneDeep";
@@ -27,7 +27,7 @@ export default class Request {
   /**
    * 全局配置组
    */
-  private globalConfigList: GlobalConfig[];
+  private globalConfig: GlobalConfig[];
   /**
    * 全局配置索引
    */
@@ -59,9 +59,9 @@ export default class Request {
    * @tips 如果传入对象 只设置一个全局变量
    * @param globalConfig 全局配置赌对象或数组
    */
-  public setGlobalConfigList(globalConfigList: GlobalConfig[]): void {
-    if (!Array.isArray(globalConfigList)) throw new Error("setGlobalConfigList必须传入数组")
-    this.globalConfigList = globalConfigList;
+  public setGlobalConfig(globalConfig: GlobalConfig[]): void {
+    if (!Array.isArray(globalConfig)) throw new Error("setGlobalConfig必须传入数组")
+    this.globalConfig = globalConfig;
   }
 
   /**
@@ -158,10 +158,10 @@ export default class Request {
     globalConfigIndex: number,
     name: string
   ) {
-    const { globalConfigList, interceptorList } = this;
+    const { globalConfig: globalConfigList, interceptorList } = this;
     // 如果存在配置数组 索引越界报错
     if (!globalConfigList)
-      throw new Error("调用setGlobalConfigList进行全局配置");
+      throw new Error("调用setGlobalConfig进行全局配置");
 
     // 配置索引越界报错
     if (globalConfigIndex > globalConfigList.length - 1)
@@ -241,7 +241,7 @@ export default class Request {
       if (name) {
         this.requestTaskList[name] = requestTask;
       }
-    })
+    });
   }
 
   /**
@@ -271,10 +271,12 @@ export default class Request {
   
   /**
    * 添加拦截器
-   * @param interceptor 拦截器函数
+   * @param interceptorList 拦截器函数数组
    */
-  public addInterceptor(interceptor: interceptor) {
-    this.interceptorList.push(interceptor);
+  public addInterceptor(interceptorList: interceptor[]) {
+    interceptorList.forEach(interceptor => {
+      this.interceptorList.push(interceptor);
+    });
   }
   
   /**
