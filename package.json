@@ -1,0 +1,31 @@
+{
+  "name": "@wuhz/uni-app-utils",
+  "version": "1.0.0",
+  "description": "uni-app util",
+  "main": "index.js",
+  "types": "./dist/main.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "index.js",
+    "package.json"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c ./build/rollup.config.js"
+  },
+  "author": "Hanzhaorz",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^11.0.0",
+    "@rollup/plugin-node-resolve": "^6.0.0",
+    "@types/lodash": "^4.14.149",
+    "rollup": "^1.27.14",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-typescript2": "^0.25.3",
+    "typescript": "^3.7.4"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "module": "esnext",
+    "target": "esnext",
+    "declaration": true,
+    "declarationDir": "./dist",
+    "sourceMap": true,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "preserveConstEnums" : true,
+    "removeComments": false,
+    "typeRoots": ["src/"]
+  },
+  "include": [
+    "src/*"
+  ],
+  "exclude": ["node_modules", "dist", "build"]
+}
