@@ -1,5 +1,5 @@
 /*
- * @Github: 
+ * @Github:
  * @Descripttion: uni app request util
  * @Version: v1.0.0
  * @Author: 吴汉钊
@@ -8,8 +8,8 @@
  * @LastEditTime : 2019-12-27 14:26:43
  */
 import typescript from "rollup-plugin-typescript2";
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
+import resolve from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
 import clear from "rollup-plugin-clear";
 import filesize from "rollup-plugin-filesize";
 import minify from "rollup-plugin-babel-minify";
@@ -30,15 +30,15 @@ export default {
   ],
   plugins: [
     clear({
-      targets: ['./dist'],
+      targets: ["./dist"],
       watch: true
-     }),
+    }),
     typescript(),
     resolve(),
     commonjs(),
-    // minify({
-    //   comments: true
-    // }),
+    minify({
+      comments: false
+    }),
     filesize()
   ]
 };

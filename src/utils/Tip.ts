@@ -1,4 +1,3 @@
-
 /**
  * 提示与加载工具类
  */
@@ -23,7 +22,7 @@ export default class Tip {
       duration
     });
     return new Promise(resolve => setTimeout(resolve, duration));
-  };
+  }
 
   /**
    * 成功提示
@@ -40,13 +39,12 @@ export default class Tip {
       duration
     });
     return new Promise(resolve => setTimeout(resolve, duration));
-  };
+  }
 
-  
   /**
    * 加载提示
-   * @param title 消息内容 
-   * @param type 加载提示类型 page或navbar 
+   * @param title 消息内容
+   * @param type 加载提示类型 page或navbar
    */
   public static showLoading(title = "", type: "page" | "navbar" = "page"): void {
     if (type === "page" && !Tip.isLoadingPage) {
@@ -55,12 +53,12 @@ export default class Tip {
         title: title,
         mask: true
       });
-    } else if (type === "navbar" && !Tip.isLoadingNavbar ) {
+    } else if (type === "navbar" && !Tip.isLoadingNavbar) {
       Tip.isLoadingNavbar = true;
       return uni.showNavigationBarLoading();
-    };
+    }
     if (type !== "page" && type !== "navbar") throw new Error("第二个参数必须是page或nabbar");
-  };
+  }
 
   /**
    * 加载完毕
@@ -73,7 +71,7 @@ export default class Tip {
       Tip.isLoadingNavbar = false;
       return uni.hideNavigationBarLoading();
     }
-  };
+  }
 
   /**
    * 两个按钮的提示窗
@@ -96,7 +94,7 @@ export default class Tip {
       confirmColor: Tip.confirmColor,
       cancelColor: Tip.cancelColor
     });
-  };
+  }
 
   /**
    * 一个按钮的提示窗
@@ -104,11 +102,7 @@ export default class Tip {
    * @param title 弹窗标题
    * @param confirmText 确认按钮文字
    */
-  public static single(
-    content: string,
-    title = "提示",
-    confirmText = "知道了"
-  ): any {
+  public static single(content: string, title = "提示", confirmText = "知道了"): any {
     return uni.showModal({
       title,
       content,
@@ -116,7 +110,7 @@ export default class Tip {
       showCancel: false,
       confirmColor: Tip.confirmColor
     });
-  };
+  }
 
   /**
    * 设置取消按钮颜色
@@ -124,7 +118,7 @@ export default class Tip {
    */
   public static setCancelColor(value: string) {
     Tip.cancelColor = value;
-  };
+  }
 
   /**
    * 设置确认按钮值
@@ -132,5 +126,5 @@ export default class Tip {
    */
   public static setConfirmColor(value: string) {
     Tip.confirmColor = value;
-  };
+  }
 }
