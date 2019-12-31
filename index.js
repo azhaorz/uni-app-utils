@@ -7,6 +7,6 @@
  * @LastEditors  : Hanzhaorz
  * @LastEditTime : 2019-12-27 12:04:51
  */
-'use strict'
+"use strict";
 
-module.exports = require('./dist/bundle.cjs.js');
+module.exports = require("./dist/bundle.cjs.js");
