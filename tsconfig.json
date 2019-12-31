@@ -11,10 +11,12 @@
     "allowSyntheticDefaultImports": true,
     "preserveConstEnums" : true,
     "removeComments": false,
-    "typeRoots": ["src/"]
+    "typeRoots": [
+      "node_modules/@types"
+    ]
   },
   "include": [
-    "src/*"
+    "src/*/*"
   ],
   "exclude": ["node_modules", "dist", "build"]
 }

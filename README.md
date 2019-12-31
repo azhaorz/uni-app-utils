@@ -19,7 +19,7 @@ npm install @wuhz/uni-app-utils --save
 yarn add @wuhz/uni-app-utils
 ```
 
-## [Request](/uni-app-utils/request.html)
+## [Request](http://blog.hzyun.top/uni-app-utils/request.html)
 
 ## 问题及建议
 

@@ -36,9 +36,9 @@ export default {
     typescript(),
     resolve(),
     commonjs(),
-    minify({
-      comments: false
-    }),
+    // minify({
+    //   comments: true
+    // }),
     filesize()
   ]
 };

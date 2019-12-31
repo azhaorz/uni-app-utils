@@ -7,6 +7,8 @@
  * @LastEditors  : Hanzhaorz
  * @LastEditTime : 2019-12-27 12:04:44
  */
-import Request from './request';
+import Request from "./utils/Request";
+import Judge from "./utils/Judge";
+import { loadingInterceptor } from "./plugins/Interceptors"
 
-export { Request };
+export { Request, Judge, loadingInterceptor };

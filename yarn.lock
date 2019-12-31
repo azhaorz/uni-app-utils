@@ -203,6 +203,13 @@
   dependencies:
     "@types/node" "*"
 
+"@types/uni-app@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@types/uni-app/-/uni-app-1.4.1.tgz#2df358d976bccd8be4e2230cc046bdcbac5e8b41"
+  integrity sha512-wO0HQ/qrLuSqIdWkqC8hdaZKsVF1NXEf/YmCGhFtXMtNj1fXkcK8kELiPYUlYW10PNl4CZ6qcPxoD3bURxBRdg==
+  dependencies:
+    vue "^2.6.8"
+
 acorn@^7.1.0:
   version "7.1.0"
   resolved "http://r.cnpmjs.org/acorn/download/acorn-7.1.0.tgz#949d36f2c292535da602283586c2477c57eb2d6c"
@@ -1050,6 +1057,11 @@ universalify@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
   integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
+
+vue@^2.6.8:
+  version "2.6.11"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"
+  integrity sha512-VfPwgcGABbGAue9+sfrD4PuwFar7gPb1yl1UK1MwXoQPAw0BKSqWfoYCT/ThFrdEVWoI51dBuyCoiNU9bZDZxQ==
 
 widest-line@^3.1.0:
   version "3.1.0"

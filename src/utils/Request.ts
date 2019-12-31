@@ -10,24 +10,17 @@
 
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
-
-const PromiseType = "[object Promise]";
-const FunctionType = "[object Function]";
-// const StringType = "[object String]";
-const ObjectType = "[object Object]";
-// const ArrayBufferType = "[object ArrayBuffer]";
-const UndefinedType = "[object Undefined]";
-// const BooleanType = "[object Boolean]";
+import Judge from './Judge';
 
 export default class Request {
   /**
    * Request实例
    */
-  static instance: Request;
+  public static instance: Request;
   /**
    * 全局配置组
    */
-  private globalConfig: GlobalConfig[];
+  private globalConfig: GlobalConfig[] = [];
   /**
    * 全局配置索引
    */
@@ -37,13 +30,15 @@ export default class Request {
    */
   private interceptorList: interceptor[] = [];
   /**
+   * 拦截器一定会执行的函数组
+   */
+  private interceptorFinalList: Function[] = [];
+  /**
    * 请求对象列表
    */
   private requestTaskList = {};
 
-  private constructor() {
-
-  }
+  private constructor() {};
 
   /**
    * 创建Request实例
@@ -51,7 +46,7 @@ export default class Request {
   static getInstance(): Request {
     if (!this.instance) this.instance = new Request();
     return this.instance;
-  }
+  };
 
   /**
    * 设置全局配置
@@ -60,9 +55,9 @@ export default class Request {
    * @param globalConfig 全局配置赌对象或数组
    */
   public setGlobalConfig(globalConfig: GlobalConfig[]): void {
-    if (!Array.isArray(globalConfig)) throw new Error("setGlobalConfig必须传入数组")
+    if (!Judge.isArray(globalConfig)) throw new Error("setGlobalConfig必须传入数组")
     this.globalConfig = globalConfig;
-  }
+  };
 
   /**
    * 发起get请求
@@ -73,7 +68,7 @@ export default class Request {
   public get(uri: string, data: ResquestData = "", localOptions: LocalOptions = {}): Promise<any> {
     const { config, globalConfigIndex, name } = localOptions;
     return this.request("GET", uri, data, config || {}, globalConfigIndex || this.globalConfigIndex, name || "");
-  }
+  };
 
   /**
    * 发起post请求
@@ -84,7 +79,7 @@ export default class Request {
   public post(uri: string, data: ResquestData = "", localOptions: LocalOptions = {}): Promise<any> {
     const { config, globalConfigIndex, name } = localOptions;
     return this.request("POST", uri, data, config || {}, globalConfigIndex || this.globalConfigIndex, name || "");
-  }
+  };
 
   /**
    * 发起put请求
@@ -95,7 +90,7 @@ export default class Request {
   public put(uri: string, data: ResquestData = "", localOptions: LocalOptions = {}): Promise<any> {
     const { config, globalConfigIndex, name } = localOptions;
     return this.request("PUT", uri, data, config || {}, globalConfigIndex || this.globalConfigIndex, name || "");
-  }
+  };
 
   /**
    * 发起delete请求
@@ -106,7 +101,7 @@ export default class Request {
   public delete(uri: string, data: ResquestData = "", localOptions: LocalOptions = {}): Promise<any> {
     const { config, globalConfigIndex, name } = localOptions;
     return this.request("DELETE", uri, data, config || {}, globalConfigIndex || this.globalConfigIndex, name || "");
-  }
+  };
 
   /**
    * 发起trace请求
@@ -117,7 +112,7 @@ export default class Request {
   public trace(uri: string, data: ResquestData = "", localOptions: LocalOptions = {}): Promise<any> {
     const { config, globalConfigIndex, name } = localOptions;
     return this.request("TRACE", uri, data, config || {}, globalConfigIndex || this.globalConfigIndex, name || "");
-  }
+  };
 
   /**
    * 发起connect请求
@@ -128,7 +123,7 @@ export default class Request {
   public connect(uri: string, data: ResquestData = "", localOptions: LocalOptions = {}): Promise<any> {
     const { config, globalConfigIndex, name } = localOptions;
     return this.request("CONNECT", uri, data, config || {}, globalConfigIndex || this.globalConfigIndex, name || "");
-  }
+  };
 
   /**
    * 发起options请求
@@ -139,8 +134,21 @@ export default class Request {
   public options(uri: string, data: ResquestData = "", localOptions: LocalOptions = {}): Promise<any> {
     const { config, globalConfigIndex, name } = localOptions;
     return this.request("OPTIONS", uri, data, config || {}, globalConfigIndex || this.globalConfigIndex, name || "");
-  }
-    
+  };
+
+  // public uploadFile(globalConfigIndex = 0): UploadTask {
+  //   const { globalConfig: globalConfigList } = this;
+  //   globalConfigList[globalConfigIndex]
+  //   return uni.uploadFile({
+  //     url: "https://mt.starli.com.cn/?r=api/maotai/user/identification-card",
+  //     filePath: tempFilePaths[0],
+  //     name: "file",
+  //     formData: {
+  //       "side": type
+  //     }
+  //   });
+  // }
+  
   /**
    * 
    * @param method 请求方法
@@ -159,15 +167,15 @@ export default class Request {
     name: string
   ) {
     const { globalConfig: globalConfigList, interceptorList } = this;
-    // 如果存在配置数组 索引越界报错
-    if (!globalConfigList)
-      throw new Error("调用setGlobalConfig进行全局配置");
+    // 判断是否设置全局配置
+    if (globalConfigList.length === 0)
+      throw new Error("至少设置一组全局配置，请调用setGlobalConfig进行全局配置");
 
     // 配置索引越界报错
     if (globalConfigIndex > globalConfigList.length - 1)
       throw new Error("无法找到当前索引下的配置，请检查配置数组");
 
-    if (this.getType(config.data) !== UndefinedType)
+    if (!Judge.isUndefined(config.data))
       throw new Error("自定义配置中不可传入data，请在请求的第二个参数中传入需要的data");
       
     // 深拷贝全局配置 防止引用窜改
@@ -179,17 +187,18 @@ export default class Request {
     const interceptorResList = [];
 
     for (let i = 0; i < interceptorList.length; i ++) {
-      const returnValue = interceptorList[i](mergeConfig);
-      const type = this.getType(returnValue);
-      if (type === PromiseType) {
+      const returnValue = interceptorList[i](mergeConfig, this.addInterceptorFinal);
+      if (Judge.isPromise(returnValue)) {
         try {
+          // 必过
           await returnValue;
         } catch (error) {
+          this.interceptorFinalList.forEach(final => final());
           return Promise.reject(error);
         }
       } else if (returnValue === false) {
         continue;
-      } else if (type === FunctionType) {
+      } else if (Judge.isFunction(returnValue)) {
         interceptorResList.unshift(returnValue);
       }
     };
@@ -199,12 +208,12 @@ export default class Request {
 
     // 同时存在 判断是否都是对象 是对象就合并
     if (globalData && data) {
-      if (this.getType(globalConfig.data) === ObjectType && this.getType(data) === ObjectType) {
+      if (Judge.isObject(globalData) && Judge.isObject(data)) {
         _data = merge(globalConfig.data, data);
       }
     } else {
       _data = globalData || data || "";
-    }
+    };
 
     const { baseUrl, header, dataType, responseType, timeout, sslVerify } = mergeConfig;
     
@@ -221,36 +230,38 @@ export default class Request {
         success: async (res) => {
           for (let i = 0; i < interceptorResList.length; i ++) {
             const returnValue = interceptorResList[i](res);
-            const type = this.getType(returnValue);
-            if (type === PromiseType) {
+            if (Judge.isPromise(returnValue)) {
               try {
+                // 必过
                 await returnValue;
               } catch (error) {
+                this.interceptorFinalList.forEach(final => final());
                 return reject(error);
               }
             } else if (returnValue === false) {
               continue;
-            }
+            };
           };
+          this.interceptorFinalList.forEach(final => final());
           resolve(res);
         },
         fail: (error) => {
+          this.interceptorFinalList.forEach(final => final());
           reject(error);
         }
-      });
-      if (name) {
-        this.requestTaskList[name] = requestTask;
-      }
+      } as RequestOptions);
+      name && (this.requestTaskList[name] = requestTask);
     });
-  }
+  };
 
   /**
    * 设置默认使用的配置
    * @param index 配置在数组中的索引
    */
   public setDefaultConfigIndex(index: number): void {
+    if (!Judge.isNumber(index)) throw new Error("setDefaultConfigIndex必须传入数字，并且与全局配置组索引相对应");
     this.globalConfigIndex = index;
-  }
+  };
 
   /**
    * 获取请求对象
@@ -258,7 +269,7 @@ export default class Request {
    */
   public getRequestTask(name: string) {
     return this.requestTaskList[name];
-  }
+  };
   
   /**
    * 合成最终请求路径
@@ -267,33 +278,35 @@ export default class Request {
    */
   private mergeUrl(baseUrl: string, uri: string): string {
     return baseUrl + uri;
-  }
+  };
   
   /**
    * 添加拦截器
    * @param interceptorList 拦截器函数数组
    */
   public addInterceptor(interceptorList: interceptor[]) {
-    interceptorList.forEach(interceptor => {
+    if (!Judge.isArray(interceptorList)) throw new Error("addInterceptor必须传入数组");
+    interceptorList.forEach((interceptor, index) => {
+      if (!Judge.isFunction(interceptor)) throw new Error(`addInterceptor传入的函数中，第${ index + 1 }个不是函数`);
       this.interceptorList.push(interceptor);
     });
-  }
-  
+  };
+
   /**
-   * 获取值的类型
-   * @param value 任意类型
-   * @return 类型字符串
+   * 添加最终执行函数
+   * @param interceptorFinal 拦截器函数数
    */
-  private getType(value: any): string {
-    return Object.prototype.toString.call(value);
-  }
+  private addInterceptorFinal = (interceptorFinal: interceptorFinal) => {
+    if (!Judge.isFunction(interceptorFinal)) throw new Error("interceptorFinal必须传入函数");
+    this.interceptorFinalList.unshift(interceptorFinal);
+  };
 };
 
 /**
  * 发送请求携带的数据
  * @tips 5+App（自定义组件编译模式）不支持ArrayBuffer类型
  */
-type ResquestData = string | object | ArrayBuffer
+type ResquestData = string | object | ArrayBuffer;
 
 /**
  * 请求方法
@@ -303,7 +316,12 @@ type RequestMethod = 'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'T
 /**
  * 拦截器函数
  */
-type interceptor = (config: MergeConfig) => Promise<any> | Function | boolean | void
+type interceptor = (config: MergeConfig, addInterceptorFinal: Function) => Promise<any> | Function | boolean | void;
+
+/**
+ * 最终执行函数
+ */
+export type interceptorFinal = () => void;
 
 /**
  * 全局配置项
@@ -314,20 +332,23 @@ interface GlobalConfig extends CommonConfig {
    */
   baseUrl: string;
   data?: ResquestData;
-}
+};
 
 /**
  * 合并配置项
  */
-interface MergeConfig extends GlobalConfig {}
+export interface MergeConfig extends GlobalConfig {
+  [propName: string]: any;
+};
 
+// 局部配置
 interface LocalConfig extends CommonConfig {
   /**
    * 开发者服务器接口地址
    */
   baseUrl?: string;
-  data?: ResquestData;
-}
+  data?: undefined;
+};
 
 /**
  * 局部配置项
@@ -342,7 +363,7 @@ interface LocalOptions {
    * 请求名称
    */
   name?: string;
-}
+};
 
 /**
  * 公共配置项
@@ -370,99 +391,4 @@ interface CommonConfig {
    * @tips 	仅5+App安卓端支持（HBuilderX 2.3.3+）
    */
   sslVerify?: boolean;
-}
-
-/**
- * uni实例
- */
-declare const uni: Uni;
-
-declare class Uni {
-  /**
-   * 发起 HTTPS 网络请求
-   * @param options
-   * @see https://uniapp.dcloud.io/api/request/request?id=request
-   */
-  request(options?: RequestOptions): RequestTask;
-}
-
-interface RequestOptions {
-  /**
-   * 开发者服务器接口地址
-   * 
-   */
-  url: string;
-  /**
-   * 请求的参数
-   * @tips 5+App（自定义组件编译模式）不支持ArrayBuffer类型
-   */
-  data?: string | object | ArrayBuffer;
-  /**
-   * 设置请求的 header，header 中不能设置 Referer。
-   */
-  header?: any;
-  /**
-   * 默认为 GET
-   * 可以是：OPTIONS，GET，HEAD，POST，PUT，DELETE，TRACE，CONNECT
-   */
-  method?: 'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'TRACE' | 'CONNECT';
-  /**
-   * 如果设为json，会尝试对返回的数据做一次 JSON.parse
-   */
-  dataType?: string;
-  /**
-   * 设置响应的数据类型。合法值：text、arraybuffer
-   */
-  responseType?: string;
-  /**
-   * 超时时间，单位 ms
-   * @tips 仅支付宝小程序
-   */
-  timeout?: number;
-  /**
-   * 验证 ssl 证书
-   * @tips 	仅5+App安卓端支持（HBuilderX 2.3.3+）
-   */
-  sslVerify?: boolean;
-  /**
-   * 成功返回的回调函数
-   */
-  success?: (result: RequestSuccessCallbackResult) => void;
-  /**
-   * 失败的回调函数
-   */
-  fail?: (result: GeneralCallbackResult) => void;
-  /**
-   * 结束的回调函数（调用成功、失败都会执行）
-   */
-  complete?: (result: GeneralCallbackResult) => void;
-}
-
-interface RequestSuccessCallbackResult {
-  /**
-   * 开发者服务器返回的数据
-   */
-  data?: string;
-  /**
-   * 开发者服务器返回的 HTTP 状态码
-   */
-  statusCode?: number;
-  /**
-   * 开发者服务器返回的 HTTP Response Header
-   */
-  header?: any;
-}
-
-interface GeneralCallbackResult {
-  /**
-   * 错误信息
-   */
-  errMsg?: string;
-}
-
-interface RequestTask {
-  /**
-   * 中断请求任务
-   */
-  abort(): void;
-}
+};
