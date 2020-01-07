@@ -2,11 +2,10 @@
   "name": "@wuhz/uni-app-utils",
   "version": "2.0.0",
   "description": "uni-app utils",
-  "main": "index.js",
+  "main": "./dist/main.js",
   "types": "./dist/types/main.d.ts",
   "files": [
-    "dist/prod",
-    "dist/types",
+    "dist",
     "src",
     "index.js",
     "package.json",
@@ -14,8 +13,6 @@
     "README.md"
   ],
   "scripts": {
-    "dev": "webpack --config ./build/webpack.dev.js",
-    "build": "webpack --config ./build/webpack.prod.js",
     "tsbuild": "npx tsc",
     "commit": "npx git-cz",
     "log": "npx conventional-changelog -p angular -i .github/CHANGELOG.md -s"
