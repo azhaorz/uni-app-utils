@@ -1,8 +1,18 @@
 {
-  "name": "uni-app-utils",
+  "name": "@wuhz/uni-app-utils",
   "version": "2.0.0",
-  "description": "",
+  "description": "uni-app utils",
   "main": "index.js",
+  "types": "./dist/types/main.d.ts",
+  "files": [
+    "dist/prod",
+    "dist/types",
+    "src",
+    "index.js",
+    "package.json",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "dev": "webpack --config ./build/webpack.dev.js",
     "build": "webpack --config ./build/webpack.prod.js",
@@ -10,16 +20,24 @@
     "commit": "npx git-cz",
     "log": "npx conventional-changelog -p angular -i .github/CHANGELOG.md -s"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Hanzhaorz",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HanZhaorz/uni-app-utils"
+  },
+  "keyword": [
+    "uni-app",
+    "vue",
+    "request",
+    "utils"
+  ],
   "devDependencies": {
     "@types/lodash": "^4.14.149",
     "@types/node": "^13.1.4",
     "@types/uni-app": "^1.4.1",
     "@typescript-eslint/eslint-plugin": "^2.14.0",
     "@typescript-eslint/parser": "^2.14.0",
-    "clean-webpack-plugin": "^3.0.0",
     "commitizen": "^4.0.3",
     "conventional-changelog": "^3.1.18",
     "conventional-changelog-cli": "^2.0.31",
@@ -28,13 +46,7 @@
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-prettier": "^3.1.2",
     "prettier": "^1.19.1",
-    "ts-loader": "^6.2.1",
-    "typescript": "^3.7.4",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.10.1",
-    "webpack-merge": "^4.2.2"
+    "typescript": "^3.7.4"
   },
   "dependencies": {
     "lodash": "^4.17.15"
