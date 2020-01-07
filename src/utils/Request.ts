@@ -1,13 +1,3 @@
-/*
- * @Github: https://github.com/HanZhaorz/uni-app-utils
- * @Descripttion: uni app utils
- * @Version: v1.0.0
- * @Author: Hanzhaorz
- * @Date: 2019-12-24 16:43:45
- * @LastEditors  : Hanzhaorz
- * @LastEditTime : 2019-12-27 16:19:03
- */
-
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import Judge from "./Judge";
