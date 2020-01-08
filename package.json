@@ -1,9 +1,9 @@
 {
   "name": "@wuhz/uni-app-utils",
-  "version": "2.0.0",
+  "version": "2.0.0-beta",
   "description": "uni-app utils",
-  "main": "./dist/main.js",
-  "types": "./dist/types/main.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
   "files": [
     "dist",
     "src",

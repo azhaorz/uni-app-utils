@@ -64,6 +64,6 @@
     /* Advanced Options */
     "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
   },
-  "files": ["src/main.ts"],
+  "files": ["src/index.ts"],
   "exclude": ["node_modules", "uni-app"]
 }
